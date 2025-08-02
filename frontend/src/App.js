@@ -76,9 +76,6 @@ function App() {
           )}
         </div>
       )}
-      <footer>
-        <small>Powered by Tamil Nadu Police Legal Chatbot</small>
-      </footer>
     </div>
   );
 }
