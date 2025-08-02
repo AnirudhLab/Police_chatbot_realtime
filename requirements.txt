@@ -1,0 +1,11 @@
+Flask
+Flask-Cors
+pandas
+openpyxl
+scikit-learn
+sentence-transformers
+numpy
+scipy
+langdetect
+googletrans==4.0.0rc1
+gunicorn
