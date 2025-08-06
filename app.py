@@ -1,4 +1,4 @@
-from flask import Flask
+from flask import Flask, send_from_directory
 from flask_cors import CORS
 from app.core.document_loader import DocumentLoader
 from app.core.text_splitter import TextSplitter
@@ -9,6 +9,7 @@ from app.services.translation_service import TranslationService
 from app.services.chat_service import ChatService
 from app.api.routes import api, init_api
 import logging
+import os
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -16,8 +17,14 @@ logger = logging.getLogger(__name__)
 def create_app():
     """Create and configure the Flask application."""
     app = Flask(__name__)
-    # Enable CORS for all origins for debugging
-    CORS(app, resources={r"/api/*": {"origins": "*"}})
+    
+    # Configure CORS based on environment
+    if os.environ.get('ENVIRONMENT') == 'production':
+        # Only allow requests from the same domain in production
+        CORS(app, resources={r"/api/*": {"origins": os.environ.get('ALLOWED_ORIGIN', '*')}})
+    else:
+        # Enable CORS for all origins in development
+        CORS(app, resources={r"/api/*": {"origins": "*"}})
 
     # Initialize components
     try:
@@ -51,6 +58,14 @@ def create_app():
         init_api(chat_service)
         app.register_blueprint(api, url_prefix='/api')
         
+        # Serve React frontend in production
+        @app.route('/', defaults={'path': ''})
+        @app.route('/<path:path>')
+        def serve(path):
+            if path and os.path.exists(os.path.join(app.static_folder, path)):
+                return send_from_directory(app.static_folder, path)
+            return send_from_directory(app.static_folder, 'index.html')
+        
         logger.info("Application initialized successfully")
         
     except Exception as e:
@@ -61,4 +76,4 @@ def create_app():
 
 if __name__ == "__main__":
     app = create_app()
-    app.run(debug=True)
+    app.run(host='0.0.0.0', port=int(os.environ.get('PORT', 5000)), debug=False)

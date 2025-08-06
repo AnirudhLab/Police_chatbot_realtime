@@ -16,7 +16,11 @@ function App() {
     setError('');
     setResponse(null);
     try {
-      const res = await fetch('http://127.0.0.1:5000/api/chat', {
+      const apiUrl = process.env.NODE_ENV === 'production' 
+        ? '/api/chat' 
+        : 'http://127.0.0.1:5000/api/chat';
+      
+      const res = await fetch(apiUrl, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ query, language })
