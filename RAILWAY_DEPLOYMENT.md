@@ -28,6 +28,7 @@ Set these environment variables in the Railway dashboard:
 - ENVIRONMENT=production
 - FLASK_ENV=production
 - ALLOWED_ORIGIN=https://your-railway-app-url.railway.app (replace with your actual URL)
+- PORT=8080 (Railway will override this, but it's good to have it set)
 
 To set environment variables in Railway:
 1. Go to your Railway project dashboard
@@ -36,6 +37,21 @@ To set environment variables in Railway:
 4. Click "New Variable" to add each key-value pair
 5. Enter the variable name and value, then click "Add"
 6. After adding all variables, Railway will automatically redeploy your application
+
+### Troubleshooting Deployment Issues
+If you encounter issues during deployment:
+
+1. **Import Errors**:
+   - We've added mock implementations of functions in `app/utils.py` to maintain compatibility
+   - Check Railway logs to identify any additional missing imports
+
+2. **Build Failures**:
+   - Make sure Node.js and npm are available for frontend building
+   - The `railway.json` file includes a build command to handle frontend setup
+
+3. **Runtime Errors**:
+   - Check the health endpoint at `/api/health` to see if the server is running
+   - Use Railway logs to diagnose specific errors in the application
 
 ### 4. Final Deployment
 After setting up environment variables, deploy again:
