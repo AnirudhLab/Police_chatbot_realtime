@@ -5,6 +5,13 @@
 2. Install Railway CLI: `npm install -g @railway/cli`
 3. Login to Railway: `railway login`
 
+## Important Note on App Structure
+This project uses a special import system to handle conflicts between the `app/` directory and `app.py` file:
+
+1. The `app_loader.py` file dynamically imports from `app.py` to avoid conflicts
+2. The `wsgi.py` file imports from `app_loader.py` instead of directly importing from `app.py` or `app/`
+3. Do not modify these files unless you fully understand the import structure
+
 ## Deployment Steps
 
 ### 1. Backend Deployment
@@ -21,6 +28,14 @@ Set these environment variables in the Railway dashboard:
 - ENVIRONMENT=production
 - FLASK_ENV=production
 - ALLOWED_ORIGIN=https://your-railway-app-url.railway.app (replace with your actual URL)
+
+To set environment variables in Railway:
+1. Go to your Railway project dashboard
+2. Click on your deployed service
+3. Navigate to "Variables" in the left sidebar
+4. Click "New Variable" to add each key-value pair
+5. Enter the variable name and value, then click "Add"
+6. After adding all variables, Railway will automatically redeploy your application
 
 ### 4. Final Deployment
 After setting up environment variables, deploy again:

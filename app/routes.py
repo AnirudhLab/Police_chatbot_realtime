@@ -1,16 +1,16 @@
 from flask import Blueprint, jsonify, request
 import logging
 
-from .utils import (generate_and_store_embeddings, query_excel_data,
-                    query_with_embeddings)
+# Import removed as functionality has moved to app.py
+# Old import: from .utils import (generate_and_store_embeddings, query_excel_data, query_with_embeddings)
 
 main = Blueprint('main', __name__)
 
 FILE_PATH = "data/Police_Chatbot_Legal_Template.xlsx"
 
-# Preprocess the Excel data and store embeddings during startup
-logging.debug("Initializing embedding generation and storage.")
-generate_and_store_embeddings(FILE_PATH)
+# Comment out functionality that has moved to app.py
+# logging.debug("Initializing embedding generation and storage.")
+# generate_and_store_embeddings(FILE_PATH)
 
 
 @main.route('/')
@@ -25,8 +25,9 @@ def query():
     if not user_query:
         return jsonify({"error": "Query parameter is missing."}), 400
 
-    results = query_excel_data(FILE_PATH, user_query)
-    return jsonify(results)
+    # Function has moved to app.py structure
+    # Return a message directing to the new endpoint
+    return jsonify({"message": "This endpoint is deprecated. Please use /api/chat instead."}), 301
 
 
 @main.route('/query_embeddings', methods=['POST'])
@@ -39,10 +40,9 @@ def query_embeddings():
             logging.warning("Query parameter is missing.")
             return jsonify({"error": "Query parameter is missing."}), 400
 
-        logging.debug(f"Processing query: {user_query}")
-        results = query_with_embeddings(user_query)
-        logging.debug(f"Query results: {results}")
-        return jsonify({"results": results})
+        # Function has moved to app.py structure
+        # Return a message directing to the new endpoint
+        return jsonify({"message": "This endpoint is deprecated. Please use /api/chat instead."}), 301
     except Exception as e:
         logging.error(f"Error in /query_embeddings endpoint: {e}")
         return jsonify({"error": "Internal server error."}), 500
