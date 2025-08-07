@@ -1,4 +1,4 @@
-from flask import Flask, send_from_directory
+from flask import Flask, send_from_directory, jsonify
 from flask_cors import CORS
 from app.core.document_loader import DocumentLoader
 from app.core.text_splitter import TextSplitter
@@ -25,6 +25,14 @@ def create_app():
     else:
         # Enable CORS for all origins in development
         CORS(app, resources={r"/api/*": {"origins": "*"}})
+        
+    # Add a root-level health check endpoint for Railway
+    @app.route('/health')
+    def root_health_check():
+        """
+        Health check endpoint at the root level for Railway healthchecks
+        """
+        return jsonify({"status": "healthy"})
 
     # Initialize components
     try:

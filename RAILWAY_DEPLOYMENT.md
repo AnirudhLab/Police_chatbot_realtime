@@ -46,19 +46,23 @@ If you encounter issues during deployment:
    - We've added mock implementations of functions in `app/utils.py` to maintain compatibility
    - Check Railway logs to identify any additional missing imports
 
-2. **Frontend Build Failures**:
-   - Make sure to run the `prepare_for_railway.sh` script locally before deploying
-   - Verify that your local Node.js and npm versions are working properly
-   - Check that the static files have been properly copied to `app/static` directory
+2. **Build Failures**:
+   - Make sure Node.js and npm are available for frontend building
+   - Use the `prepare_for_railway.sh` script to build the frontend locally
 
-3. **Runtime Errors**:
-   - Check the health endpoint at `/api/health` to see if the server is running
-   - Use Railway logs to diagnose specific errors in the application
-   - If you get a "Not Found" error, make sure the static files are in the correct location
+3. **Healthcheck Failures**:
+   - Railway uses the `/health` endpoint to verify your application is running
+   - We've modified the app to include a root-level health check endpoint
+   - Reduced healthcheck timeout from 300 to 60 seconds
+   - Make sure your data directory has valid files
 
-4. **Command Not Found (Exit Code 127)**:
-   - This usually means Railway couldn't find a command in the build script
-   - We're now building the frontend locally to avoid this issue
+4. **Missing Data Files**:
+   - The application now creates placeholder data if no files are found
+   - For production, make sure to upload your real data files
+
+5. **Checking Logs**:
+   - Use `railway logs` to check what's happening during deployment
+   - Look for specific error messages in the logs
 
 ### 4. Final Deployment
 After setting up environment variables, deploy again:

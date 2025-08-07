@@ -4,6 +4,14 @@
 
 echo "Building frontend for production deployment..."
 
+# Make sure data directory exists
+echo "Checking data directory..."
+mkdir -p data
+if [ ! -f "data/Police_Chatbot_Legal_Template.xlsx" ]; then
+    echo "Creating placeholder data file..."
+    echo '{"columns":["Law Type","Law Name/Section","Law Details","When Applicable","Legal Reference"],"data":[["Example","Section 1","This is an example law","When relevant","Legal Code 1"]]}' > data/placeholder_data.json
+fi
+
 # Navigate to frontend directory
 cd frontend
 
