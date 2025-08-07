@@ -62,9 +62,22 @@ def create_app():
         @app.route('/', defaults={'path': ''})
         @app.route('/<path:path>')
         def serve(path):
-            if path and os.path.exists(os.path.join(app.static_folder, path)):
-                return send_from_directory(app.static_folder, path)
-            return send_from_directory(app.static_folder, 'index.html')
+            static_folder = os.path.join(os.path.dirname(__file__), 'app', 'static')
+            app.static_folder = static_folder
+            
+            # Check if static folder exists
+            if not os.path.exists(static_folder):
+                os.makedirs(static_folder, exist_ok=True)
+                with open(os.path.join(static_folder, 'index.html'), 'w') as f:
+                    f.write('<html><body><h1>API Server Running</h1><p>Frontend not built. Please run prepare_for_railway.sh first.</p></body></html>')
+            
+            if path != "" and os.path.exists(os.path.join(static_folder, path)):
+                return send_from_directory(static_folder, path)
+            else:
+                try:
+                    return send_from_directory(static_folder, 'index.html')
+                except:
+                    return "<html><body><h1>API Server Running</h1><p>Frontend not available. API endpoints can be accessed at /api/</p></body></html>"
         
         logger.info("Application initialized successfully")
         
